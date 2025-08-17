@@ -14,6 +14,7 @@ import { createRef, useRef, useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import TextSection from './component/textSection';
 import ImageSection from './component/imageSection';
+import VideoSection from './component/videoSection';
 
 const iconStyle = {
   border: '1px solid #E0E0E0',
@@ -65,8 +66,11 @@ const Template = () => {
   // Function to handle saving changes
   const handleSave = () => {
     componentRefs.current.forEach((ref, idx) => {
+      console.log('Calling saveChanges for component', idx, 'ref:', ref, 'ref.current:', ref?.current);
       if (ref && ref.current && typeof ref.current.saveChanges === 'function') {
         ref.current.saveChanges();
+      } else {
+        console.warn('saveChanges not found for component', idx);
       }
     });
     setIsEditing(false);
@@ -75,8 +79,11 @@ const Template = () => {
   // Function to cancel changes in all components
   const handleCancel = () => {
     componentRefs.current.forEach((ref, idx) => {
+      console.log('Calling cancelChanges for component', idx, 'ref:', ref, 'ref.current:', ref?.current);
       if (ref && ref.current && typeof ref.current.cancelChanges === 'function') {
         ref.current.cancelChanges();
+      } else {
+        console.warn('cancelChanges not found for component', idx);
       }
     });
     setIsEditing(false);
@@ -87,33 +94,38 @@ const Template = () => {
     setComponents((prev) => [...prev, { type: value }]);
   };
 
+  // Ensure refs array is always in sync with components array
+  if (componentRefs.current.length !== components.length) {
+    componentRefs.current = components.map((_, idx) => componentRefs.current[idx] || createRef());
+  }
+
   // Function to render each component based on its type
   const renderComponent = (component, idx) => {
+    // Always assign a ref for every component
+    if (!componentRefs.current[idx].current) {
+      componentRefs.current[idx] = createRef();
+    } else {
+      console.log('ref found', componentRefs.current[idx]);
+    }
+    console.log(componentRefs.current);
     switch (component.type) {
       case 'text':
-        if (!componentRefs.current[idx]) componentRefs.current[idx] = createRef();
         return <TextSection ref={componentRefs.current[idx]} key={idx} isEditing={isEditing} />;
       case 'image':
-        if (!componentRefs.current[idx]) componentRefs.current[idx] = createRef();
-        return <ImageSection ref={componentRefs.current[idx]} isEditing={isEditing} />;
+        return <ImageSection ref={componentRefs.current[idx]} key={idx} isEditing={isEditing} />;
       case 'video':
-        return (
-          <Box key={idx} sx={{ padding: 2, border: '1px solid #E0E0E0', borderRadius: 2 }}>
-            Video Component
-          </Box>
-        );
+        return <VideoSection ref={componentRefs.current[idx]} key={idx} isEditing={isEditing} />;
+      case 'person':
+        return <ProfileSection key={idx} isEditing={isEditing} ref={componentRefs.current[idx]} />;
       case 'link':
         return (
-          <Box key={idx} sx={{ padding: 2, border: '1px solid #E0E0E0', borderRadius: 2 }}>
+          <Box key={idx} ref={componentRefs.current[idx]} sx={{ padding: 2, border: '1px solid #E0E0E0', borderRadius: 2 }}>
             Link Component
           </Box>
         );
-      case 'person':
-        if (!componentRefs.current[idx]) componentRefs.current[idx] = createRef();
-        return <ProfileSection key={idx} isEditing={isEditing} ref={componentRefs.current[idx]} />;
       case 'background-color':
         return (
-          <Box key={idx} sx={{ padding: 2, backgroundColor: '#f5f5f5', borderRadius: 2 }}>
+          <Box key={idx} ref={componentRefs.current[idx]} sx={{ padding: 2, backgroundColor: '#f5f5f5', borderRadius: 2 }}>
             Background Color Component
           </Box>
         );
@@ -195,7 +207,7 @@ const Template = () => {
         >
           <Stack spacing={2} alignItems="center">
             {editorOptions.map((option) => (
-              <IconButton sx={iconStyle} key={option.icon} onClick={() => addComponent(option.value)}>
+              <IconButton sx={iconStyle} key={option.value} onClick={() => addComponent(option.value)}>
                 {option.icon}
               </IconButton>
             ))}

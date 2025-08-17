@@ -33,7 +33,7 @@ const ValueLabelChip = ({ value }) => {
   );
 };
 
-const ProfileSection = forwardRef(({ isEditing ,ref }) => {
+const ProfileSection = forwardRef(({ isEditing }, ref) => {
   const theme = useTheme();
   const [component, setComponent] = useState(null);
   const [tempComponent, setTempComponent] = useState(null);
@@ -43,6 +43,7 @@ const ProfileSection = forwardRef(({ isEditing ,ref }) => {
   // Expose functions to parent
   useImperativeHandle(ref, () => ({
     saveChanges: () => {
+      console.log('Saving changes for ProfileSection:', tempComponent);
       setComponent(tempComponent);
     },
     cancelChanges: () => {
@@ -101,8 +102,23 @@ const ProfileSection = forwardRef(({ isEditing ,ref }) => {
         }}
       >
         {!bannerImage && (
-          <Box sx={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 2 }}>
-            <Typography color="text.secondary" mb={1}>Please add image</Typography>
+          <Box
+            sx={{
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              top: 0,
+              bottom: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 2
+            }}
+          >
+            <Typography color="text.secondary" mb={1}>
+              Please add image
+            </Typography>
           </Box>
         )}
         <Box
@@ -126,7 +142,7 @@ const ProfileSection = forwardRef(({ isEditing ,ref }) => {
                 height: tempComponent.logoImageSize,
                 borderRadius: `${tempComponent.logoImageRadius}%`,
                 objectFit: 'cover',
-                background: '#fff',
+                background: '#fff'
               }}
             />
           ) : (
@@ -150,7 +166,7 @@ const ProfileSection = forwardRef(({ isEditing ,ref }) => {
         </Box>
       </Box>
       <Grid container spacing={2}>
-        <Grid item size={{xs:6}} gap={2} display={'flex'} flexDirection={'column'}>
+        <Grid item size={{ xs: 6 }} gap={2} display={'flex'} flexDirection={'column'}>
           <TextField
             variant="outlined"
             placeholder="Add Profile Name..."
@@ -168,18 +184,18 @@ const ProfileSection = forwardRef(({ isEditing ,ref }) => {
             onChange={(e) => changeValue('subTitle', e.target.value)}
           />
         </Grid>
-        <Grid item size={{xs:6}} display={'flex'} flexDirection={'column'} gap={2}>
+        <Grid item size={{ xs: 6 }} display={'flex'} flexDirection={'column'} gap={2}>
           {/* Banner Image File Box */}
           <Box display="flex" alignItems="center" gap={2} mb={1}>
             <Box flex={1} sx={{ border: '1px solid #ccc', borderRadius: 1, px: 2, py: 1, bgcolor: '#fafafa', fontSize: 14 }}>
               {bannerImage ? bannerImage.split('/').pop() : 'No banner image selected'}
             </Box>
             {bannerImage ? (
-              <Button variant="outlined" color="error" size="small" onClick={() => setBannerImage(null)} sx={{width:'120px'}}>
+              <Button variant="outlined" color="error" size="small" onClick={() => setBannerImage(null)} sx={{ width: '120px' }}>
                 Remove Image
               </Button>
             ) : (
-              <Button variant="contained" component="label" size="small" sx={{width:'120px'}}>
+              <Button variant="contained" component="label" size="small" sx={{ width: '120px' }}>
                 Add Image
                 <input type="file" accept="image/*" hidden onChange={handleBannerChange} />
               </Button>
@@ -191,11 +207,11 @@ const ProfileSection = forwardRef(({ isEditing ,ref }) => {
               {logoImage ? logoImage.split('/').pop() : 'No profile image selected'}
             </Box>
             {logoImage ? (
-              <Button variant="outlined" color="error" size="small" sx={{width:'120px'}} onClick={() => setLogoImage(null)}>
+              <Button variant="outlined" color="error" size="small" sx={{ width: '120px' }} onClick={() => setLogoImage(null)}>
                 Remove Image
               </Button>
             ) : (
-              <Button variant="contained" component="label" size="small" sx={{width:'120px'}}>
+              <Button variant="contained" component="label" size="small" sx={{ width: '120px' }}>
                 Add Image
                 <input type="file" accept="image/*" hidden onChange={handleLogoChange} />
               </Button>
@@ -354,7 +370,20 @@ const ProfileSection = forwardRef(({ isEditing ,ref }) => {
         }}
       >
         {!bannerImage && (
-          <Box sx={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 2 }}>
+          <Box
+            sx={{
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              top: 0,
+              bottom: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 2
+            }}
+          >
             <Typography color="text.secondary">Please add image</Typography>
           </Box>
         )}
@@ -379,7 +408,7 @@ const ProfileSection = forwardRef(({ isEditing ,ref }) => {
                 height: component?.logoImageSize || defaultComponent.logoImageSize,
                 borderRadius: `${component?.logoImageRadius || defaultComponent.logoImageRadius}%`,
                 objectFit: 'cover',
-                background: '#fff',
+                background: '#fff'
               }}
             />
           ) : (

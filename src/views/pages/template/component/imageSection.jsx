@@ -27,6 +27,7 @@ const ImageSection = forwardRef(({ isEditing }, ref) => {
   useImperativeHandle(ref, () => ({
     saveChanges: () => {
       // Save the actual file objects for database storage
+      console.log('Saving changes for ImageSection:', tempComponent);
       setComponent((prev) => ({ ...prev, ...tempComponent, images: [...tempComponent.images] }));
     },
     cancelChanges: () => {

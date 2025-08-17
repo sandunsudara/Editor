@@ -97,6 +97,7 @@ const TextSection = forwardRef(({ isEditing }, ref) => {
     ref,
     () => ({
       saveChanges: () => {
+        console.log('Saving changes for TextSection:', tempComponent);
         if (editor) {
           const html = editor.getHTML();
           console.log(html);
