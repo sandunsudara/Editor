@@ -1,4 +1,4 @@
-import  { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Box, IconButton, Typography } from '@mui/material';
 import { Close, Edit } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
@@ -6,9 +6,12 @@ import { styled } from '@mui/material/styles';
 const UploadContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
   width: '100%',
+  height: '100%',
   aspectRatio: '4/3',
   borderRadius: '20px',
-  overflow: 'hidden'
+  overflow: 'hidden',
+  border: '1px solid #eee'
+  // Best practice: let parent/grid item set width, e.g. <Grid item xs={6}>
 }));
 
 const UploadArea = styled(Box)(({ theme, isDragActive }) => ({
@@ -54,10 +57,25 @@ const RemoveButton = styled(IconButton)(({ theme }) => ({
   }
 }));
 
-const ImageUploader = () => {
-  const [image, setImage] = useState(null);
+const ImageUploader = ({ image, onChange }) => {
   const [isDragActive, setIsDragActive] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState(null);
   const inputRef = useRef(null);
+
+  useEffect(() => {
+    // Create preview URL when image file is available
+    if (image instanceof File) {
+      console.log(image);
+      const url = URL.createObjectURL(image);
+      console.log(url);
+      setPreviewUrl(url);
+
+      // Clean up the URL when component unmounts or image changes
+      return () => URL.revokeObjectURL(url);
+    } else {
+      setPreviewUrl(null);
+    }
+  }, [image]);
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -72,15 +90,12 @@ const ImageUploader = () => {
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      setImage(reader.result);
-    };
-    reader.readAsDataURL(file);
+    // Pass the file object directly to parent instead of data URL
+    if (onChange) onChange(file);
   };
 
   const removeImage = () => {
-    setImage(null);
+    if (onChange) onChange(null);
     if (inputRef.current) {
       inputRef.current.value = '';
     }
@@ -141,7 +156,7 @@ const ImageUploader = () => {
           </RemoveButton>
           <Box
             component="img"
-            src={image}
+            src={previewUrl}
             alt="Preview"
             sx={{
               width: '100%',
