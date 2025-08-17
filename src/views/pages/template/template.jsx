@@ -79,7 +79,6 @@ const Template = () => {
   // Function to handle saving changes
   const handleSave = () => {
     componentRefs.current.forEach((ref, idx) => {
-      console.log('Calling saveChanges for component', idx, 'ref:', ref, 'ref.current:', ref?.current);
       if (ref && ref.current && typeof ref.current.saveChanges === 'function') {
         ref.current.saveChanges();
       } else {
@@ -131,8 +130,6 @@ const Template = () => {
     // Always assign a ref for every component
     if (!componentRefs.current[idx].current) {
       componentRefs.current[idx] = createRef();
-    } else {
-      console.log('ref found', componentRefs.current[idx]);
     }
     switch (component.type) {
       case 'text':
@@ -281,34 +278,33 @@ const Template = () => {
             }}
             id="draggable-scroll-container"
           >
-            {isEditing ? (
-              <DragDropContext onDragEnd={onDragEnd}>
-                <Droppable droppableId="droppable-components">
-                  {(provided) => (
-                    <Box
-                      ref={provided.innerRef}
-                      {...provided.droppableProps}
-                      sx={{ minHeight: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}
-                    >
-                      {components.map((component, idx) => (
-                        <Draggable key={idx} draggableId={`component-${idx}`} index={idx}>
-                          {(provided, snapshot) => (
-                            <Box
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              sx={{
-                                ...provided.draggableProps.style,
-                                marginBottom: 2,
-                                opacity: snapshot.isDragging ? 0.7 : 1,
-                                background: '#f9f9f9',
-                                borderRadius: 2,
-                                boxShadow: snapshot.isDragging ? '0 2px 8px rgba(0,0,0,0.08)' : 'none',
-                                position: 'relative',
-                                display: 'flex',
-                                flexDirection: 'column'
-                              }}
-                            >
-                              {/* Drag handle at the top */}
+            <DragDropContext onDragEnd={onDragEnd}>
+              <Droppable droppableId="droppable-components">
+                {(provided) => (
+                  <Box
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                    sx={{ minHeight: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}
+                  >
+                    {components.map((component, idx) => (
+                      <Draggable key={idx} draggableId={`component-${idx}`} index={idx} isDragDisabled={!isEditing}>
+                        {(provided, snapshot) => (
+                          <Box
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            sx={{
+                              ...provided.draggableProps.style,
+                              marginBottom: 2,
+                              opacity: snapshot.isDragging ? 0.7 : 1,
+                              borderRadius: 2,
+                              boxShadow: snapshot.isDragging ? '0 2px 8px rgba(0,0,0,0.08)' : 'none',
+                              position: 'relative',
+                              display: 'flex',
+                              flexDirection: 'column'
+                            }}
+                          >
+                            {/* Drag handle at the top, only in edit mode */}
+                            {isEditing && (
                               <Box
                                 {...provided.dragHandleProps}
                                 sx={{
@@ -350,26 +346,18 @@ const Template = () => {
                                   <DragHandleOutlined />
                                 </Box>
                               </Box>
-                              {/* Component content below drag handle */}
-                              <Box sx={{ paddingTop: 1 }}>{renderComponent(component, idx)}</Box>
-                            </Box>
-                          )}
-                        </Draggable>
-                      ))}
-                      {provided.placeholder}
-                    </Box>
-                  )}
-                </Droppable>
-              </DragDropContext>
-            ) : (
-              <>
-                {components.map((component, idx) => (
-                  <div key={idx} style={{ marginBottom: 8 }}>
-                    {renderComponent(component, idx)}
-                  </div>
-                ))}
-              </>
-            )}
+                            )}
+                            {/* Component content below drag handle */}
+                            <Box sx={{ paddingTop: 1 }}>{renderComponent(component, idx)}</Box>
+                          </Box>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </Box>
+                )}
+              </Droppable>
+            </DragDropContext>
           </Box>
         </Grid>
       </Grid>
