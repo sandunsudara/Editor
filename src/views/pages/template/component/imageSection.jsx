@@ -194,7 +194,7 @@ const ImageSection = forwardRef(({ isEditing, deleteComponent }, ref) => {
           </Grid>
         </>
       ) : (
-        <Box sx={{ p: 2 }}>
+        <Box>
           <Typography variant="h5" align={component.mainTileAlign || 'left'} gutterBottom sx={{ fontWeight: 600 }}>
             {component.mainTile || 'Image Section'}
           </Typography>
