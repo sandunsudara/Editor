@@ -32,6 +32,19 @@ const VideoSection = forwardRef(({ isEditing, deleteComponent }, ref) => {
     },
     cancelChanges: () => {
       console.log('Changes cancelled');
+    },
+    getContent: () => {
+      const componentContent = {
+        type: 'video',
+        settings: {
+          mainTileAlign: tempComponent.mainTileAlign
+        },
+        props: {
+          mainTile: tempComponent.mainTile,
+          url: tempComponent.url
+        }
+      };
+      console.log(componentContent);
     }
   }));
 
