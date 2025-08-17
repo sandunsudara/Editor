@@ -15,6 +15,7 @@ import { useTheme } from '@mui/material/styles';
 import TextSection from './component/textSection';
 import ImageSection from './component/imageSection';
 import VideoSection from './component/videoSection';
+import LinkSection from './component/linkSection';
 
 const iconStyle = {
   border: '1px solid #E0E0E0',
@@ -118,11 +119,8 @@ const Template = () => {
       case 'person':
         return <ProfileSection key={idx} isEditing={isEditing} ref={componentRefs.current[idx]} />;
       case 'link':
-        return (
-          <Box key={idx} ref={componentRefs.current[idx]} sx={{ padding: 2, border: '1px solid #E0E0E0', borderRadius: 2 }}>
-            Link Component
-          </Box>
-        );
+        return <LinkSection key={idx} isEditing={isEditing} ref={componentRefs.current[idx]} />;
+
       case 'background-color':
         return (
           <Box key={idx} ref={componentRefs.current[idx]} sx={{ padding: 2, backgroundColor: '#f5f5f5', borderRadius: 2 }}>
@@ -219,11 +217,14 @@ const Template = () => {
           sx={{
             background: '#fff',
             borderRadius: '16px',
+            display: 'flex',
+            flexDirection: 'column',
             width: '100%',
             height: 'calc(100vh - 200px)',
             minHeight: '400px',
             overflow: 'auto',
-            p: 2
+            p: 2,
+            gap:2
           }}
         >
           {components.map((component, idx) => renderComponent(component, idx))}
