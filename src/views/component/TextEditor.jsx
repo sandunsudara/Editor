@@ -1,7 +1,7 @@
-import TextEditorMenuItems from './TextEditorMenuItems';
 import { Box } from '@mui/material';
 import { EditorContent } from '@tiptap/react';
 import { styled } from '@mui/material/styles';
+import TextEditorMenuItemsList from './TextEditorMenuItemsList';
 
 const EditorWrapper = styled(Box)(({ theme, active }) => ({
   position: 'relative',
@@ -45,7 +45,7 @@ const EditorContentStyled = styled(EditorContent)({
 const TextEditor = ({ editor, active }) => {
   return (
     <EditorWrapper active={active ? 1 : 0}>
-      <TextEditorMenuItems editor={editor} />
+      <TextEditorMenuItemsList editor={editor} />
       <EditorInner>{editor ? <EditorContentStyled editor={editor} /> : <Box>Loading editor…</Box>}</EditorInner>
     </EditorWrapper>
   );

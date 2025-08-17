@@ -10,9 +10,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Close';
 import ProfileSection from './component/profileSection';
-import { useState, useRef, createRef } from 'react';
+import { createRef, useRef, useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import TextSection from './component/textSection';
+import ImageSection from './component/imageSection';
 
 const iconStyle = {
   border: '1px solid #E0E0E0',
@@ -61,7 +62,6 @@ const Template = () => {
   const [components, setComponents] = useState([]);
   const componentRefs = useRef([]);
 
-
   // Function to handle saving changes
   const handleSave = () => {
     componentRefs.current.forEach((ref, idx) => {
@@ -92,15 +92,10 @@ const Template = () => {
     switch (component.type) {
       case 'text':
         if (!componentRefs.current[idx]) componentRefs.current[idx] = createRef();
-        return (
-          <TextSection ref={componentRefs.current[idx]} key={idx} isEditing={isEditing}/>
-        );
+        return <TextSection ref={componentRefs.current[idx]} key={idx} isEditing={isEditing} />;
       case 'image':
-        return (
-          <Box key={idx} sx={{ padding: 2, border: '1px solid #E0E0E0', borderRadius: 2 }}>
-            Image Component
-          </Box>
-        );
+        if (!componentRefs.current[idx]) componentRefs.current[idx] = createRef();
+        return <ImageSection ref={componentRefs.current[idx]} isEditing={isEditing} />;
       case 'video':
         return (
           <Box key={idx} sx={{ padding: 2, border: '1px solid #E0E0E0', borderRadius: 2 }}>
@@ -127,7 +122,6 @@ const Template = () => {
     }
   };
 
-
   return (
     <Grid container spacing={2}>
       <Grid item size={{ xs: 12 }} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }} gap={1}>
@@ -149,7 +143,7 @@ const Template = () => {
             <EditIcon sx={{ color: theme.palette.secondary.light }} fontSize="small" />
           </IconButton>
         ) : (
-          <Box sx={{mr:1}}>
+          <Box sx={{ mr: 1 }}>
             {/* Save Button */}
             <IconButton
               sx={{
@@ -217,7 +211,7 @@ const Template = () => {
             height: 'calc(100vh - 200px)',
             minHeight: '400px',
             overflow: 'auto',
-            p:2
+            p: 2
           }}
         >
           {components.map((component, idx) => renderComponent(component, idx))}
