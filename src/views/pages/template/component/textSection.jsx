@@ -97,7 +97,6 @@ const TextSection = forwardRef(({ isEditing, deleteComponent }, ref) => {
     ref,
     () => ({
       saveChanges: () => {
-        console.log('Saving changes for TextSection:', tempComponent);
         if (editor) {
           const html = editor.getHTML();
           console.log(html);
@@ -111,6 +110,14 @@ const TextSection = forwardRef(({ isEditing, deleteComponent }, ref) => {
         if (editor) {
           editor.commands.setContent(component.content || '');
         }
+      },
+      getContent: () => {
+        const componentContent = {
+          type: 'text',
+          content: component.content || '',
+          settings: {}
+        }
+        console.log(componentContent);
       }
     }),
     [editor, component]
