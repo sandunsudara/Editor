@@ -29,6 +29,15 @@ const LinkSection = forwardRef(({ isEditing, deleteComponent }, ref) => {
     },
     cancelChanges: () => {
       setTempComponent(component); // Revert edits
+    },
+    getContent: () => {
+      const componentContent = {
+        type: 'link',
+        props: {
+          links: tempComponent?.links || []
+        }
+      };
+      console.log(componentContent);
     }
   }));
 
