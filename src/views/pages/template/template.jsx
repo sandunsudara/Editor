@@ -163,6 +163,17 @@ const Template = () => {
     }
   };
 
+
+  const handlePublish = () => {
+    componentRefs.current.forEach((ref, idx) => {
+      if (ref && ref.current && typeof ref.current.getContent() === 'function') {
+        ref.current.getContent();
+      } else {
+        console.warn('getContent not found for component', idx);
+      }
+    });
+  };
+
   return (
     <>
       <ThemeSettingDrawer setSettingsDrawerOpen={setSettingsDrawerOpen} settingsDrawerOpen={settingsDrawerOpen} />
@@ -221,7 +232,7 @@ const Template = () => {
               </IconButton>
             </Box>
           )}
-          <Button variant={'outlined'}>Publish</Button>
+          <Button variant={'outlined'} onClick={handlePublish}>Publish</Button>
         </Grid>
         <Grid item size={{ xs: 1 }} height={'400px'}>
           <Box

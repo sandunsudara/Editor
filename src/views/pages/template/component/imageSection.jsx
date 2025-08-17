@@ -34,6 +34,20 @@ const ImageSection = forwardRef(({ isEditing, deleteComponent }, ref) => {
     },
     cancelChanges: () => {
       setTempComponent(component);
+    },
+    getContent: () => {
+      const componentContent = {
+        type: 'image',
+        settings: {
+          mainTileAlign: component.mainTileAlign,
+          noOfImage: component.noOfImage
+        },
+        props: {
+          mainTile: component.mainTile,
+          images: component.images.filter((file) => file)
+        }
+      };
+      console.log(componentContent);
     }
   }));
 
