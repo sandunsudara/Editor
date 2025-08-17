@@ -59,10 +59,17 @@ const editorOptions = [
 ];
 
 const Template = () => {
-  const theme = useTheme();
-  const [isEditing, setIsEditing] = useState(false);
   const [components, setComponents] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
   const componentRefs = useRef([]);
+  const theme = useTheme();
+
+  // Function to delete a component by index
+  const deleteComponent = (idx) => {
+    setComponents((prev) => prev.filter((_, i) => i !== idx));
+    // Remove the ref as well
+    componentRefs.current.splice(idx, 1);
+  };
 
   // Function to handle saving changes
   const handleSave = () => {
@@ -108,19 +115,27 @@ const Template = () => {
     } else {
       console.log('ref found', componentRefs.current[idx]);
     }
-    console.log(componentRefs.current);
     switch (component.type) {
       case 'text':
-        return <TextSection ref={componentRefs.current[idx]} key={idx} isEditing={isEditing} />;
+        return (
+          <TextSection ref={componentRefs.current[idx]} key={idx} isEditing={isEditing} deleteComponent={() => deleteComponent(idx)} />
+        );
       case 'image':
-        return <ImageSection ref={componentRefs.current[idx]} key={idx} isEditing={isEditing} />;
+        return (
+          <ImageSection ref={componentRefs.current[idx]} key={idx} isEditing={isEditing} deleteComponent={() => deleteComponent(idx)} />
+        );
       case 'video':
-        return <VideoSection ref={componentRefs.current[idx]} key={idx} isEditing={isEditing} />;
+        return (
+          <VideoSection ref={componentRefs.current[idx]} key={idx} isEditing={isEditing} deleteComponent={() => deleteComponent(idx)} />
+        );
       case 'person':
-        return <ProfileSection key={idx} isEditing={isEditing} ref={componentRefs.current[idx]} />;
+        return (
+          <ProfileSection key={idx} isEditing={isEditing} ref={componentRefs.current[idx]} deleteComponent={() => deleteComponent(idx)} />
+        );
       case 'link':
-        return <LinkSection key={idx} isEditing={isEditing} ref={componentRefs.current[idx]} />;
-
+        return (
+          <LinkSection key={idx} isEditing={isEditing} ref={componentRefs.current[idx]} deleteComponent={() => deleteComponent(idx)} />
+        );
       case 'background-color':
         return (
           <Box key={idx} ref={componentRefs.current[idx]} sx={{ padding: 2, backgroundColor: '#f5f5f5', borderRadius: 2 }}>
@@ -224,7 +239,7 @@ const Template = () => {
             minHeight: '400px',
             overflow: 'auto',
             p: 2,
-            gap:2
+            gap: 2
           }}
         >
           {components.map((component, idx) => renderComponent(component, idx))}

@@ -2,6 +2,8 @@ import { Box } from '@mui/material';
 import { EditorContent } from '@tiptap/react';
 import { styled } from '@mui/material/styles';
 import TextEditorMenuItemsList from './TextEditorMenuItemsList';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 const EditorWrapper = styled(Box)(({ theme, active }) => ({
   position: 'relative',
@@ -9,7 +11,8 @@ const EditorWrapper = styled(Box)(({ theme, active }) => ({
   padding: 14,
   background: '#fff',
   border: `1px dashed ${active ? '#e9644a' : '#bdbdbd'}`,
-  maxWidth: '100%'
+  maxWidth: '100%',
+  pt: 5
 }));
 
 const EditorInner = styled(Box)({
@@ -42,9 +45,18 @@ const EditorContentStyled = styled(EditorContent)({
   }
 });
 
-const TextEditor = ({ editor, active }) => {
+const TextEditor = ({ editor, active, deleteComponent }) => {
   return (
     <EditorWrapper active={active ? 1 : 0}>
+      <IconButton
+        size="small"
+        color="error"
+        sx={{ position: 'absolute', top: 0, right: 0, zIndex: 2 }}
+        onClick={deleteComponent}
+        aria-label="Delete section"
+      >
+        <CloseIcon />
+      </IconButton>
       <TextEditorMenuItemsList editor={editor} />
       <EditorInner>{editor ? <EditorContentStyled editor={editor} /> : <Box>Loading editor…</Box>}</EditorInner>
     </EditorWrapper>

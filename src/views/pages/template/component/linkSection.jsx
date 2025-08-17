@@ -10,12 +10,13 @@ import DragIndicator from '@mui/icons-material/DragIndicator';
 import DeleteOutline from '@mui/icons-material/DeleteOutline';
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd';
 import LinkView from '../../../component/LinkView';
+import CloseIcon from '@mui/icons-material/Close';
 
 const defaultComponent = {
   links: []
 };
 
-const LinkSection = forwardRef(({ isEditing }, ref) => {
+const LinkSection = forwardRef(({ isEditing, deleteComponent }, ref) => {
   const theme = useTheme();
   const [component, setComponent] = useState();
   const [tempComponent, setTempComponent] = useState();
@@ -55,7 +56,6 @@ const LinkSection = forwardRef(({ isEditing }, ref) => {
     setTempComponent((prev) => ({ ...prev, links: items }));
   };
 
-
   useEffect(() => {
     setComponent(defaultComponent);
     setTempComponent(defaultComponent);
@@ -69,16 +69,26 @@ const LinkSection = forwardRef(({ isEditing }, ref) => {
         display: 'flex',
         flexDirection: 'column',
         gap: 2,
-        p: 2
+        p: 2,
+        position: 'relative'
       }}
     >
+      <IconButton
+        size="small"
+        color="error"
+        sx={{ position: 'absolute', top: 8, right: 8, zIndex: 2 }}
+        onClick={deleteComponent}
+        aria-label="Delete section"
+      >
+        <CloseIcon />
+      </IconButton>
       <Grid container spacing={2}>
         <Grid item size={12}>
           <Box
             sx={{
               border: '2px dashed rgba(0, 0, 0, 0.23)',
               borderRadius: 2,
-              p: 2,
+              p: 2
             }}
           >
             {tempComponent?.links.map((value, index) => (
@@ -182,11 +192,9 @@ const LinkSection = forwardRef(({ isEditing }, ref) => {
     </Box>
   ) : (
     <Box sx={{ p: 2 }}>
-      <Box sx={{ display: 'flex', flexDirection:'column', gap: 2 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         {component?.links?.length ? (
-          component.links.map((value, index) => (
-            <LinkView type={value?.type} key={index} link={value.url} />
-          ))
+          component.links.map((value, index) => <LinkView type={value?.type} key={index} link={value.url} />)
         ) : (
           <Typography color="text.secondary">No links to preview</Typography>
         )}

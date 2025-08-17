@@ -10,6 +10,7 @@ import DragIndicator from '@mui/icons-material/DragIndicator';
 import DeleteOutline from '@mui/icons-material/DeleteOutline';
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd';
 import VideoPlaceHolder from '../../../component/VideoPlaceHolder';
+import CloseIcon from '@mui/icons-material/Close';
 
 const defaultComponent = {
   mainTileAlign: 'left',
@@ -17,11 +18,11 @@ const defaultComponent = {
   url: []
 };
 
-const VideoSection = forwardRef(({ isEditing }, ref) => {
+const VideoSection = forwardRef(({ isEditing, deleteComponent }, ref) => {
   const theme = useTheme();
 
-  const [component, setComponent] = useState();
-  const [tempComponent, setTempComponent] = useState();
+  const [component, setComponent] = useState(defaultComponent);
+  const [tempComponent, setTempComponent] = useState(defaultComponent);
   const [urlInput, setUrlInput] = useState('');
 
   useImperativeHandle(ref, () => ({
@@ -70,6 +71,9 @@ const VideoSection = forwardRef(({ isEditing }, ref) => {
 
   const urlCount = tempComponent?.url?.length || 0;
 
+  // Guard: if tempComponent or component is undefined, don't render
+  if (!tempComponent || !component) return null;
+
   // Preview UI (show after save or when not editing)
   if (!isEditing) {
     return (
@@ -103,9 +107,20 @@ const VideoSection = forwardRef(({ isEditing }, ref) => {
         display: 'flex',
         flexDirection: 'column',
         gap: 2,
-        p: 2
+        p: 2,
+        pt: 5,
+        position: 'relative'
       }}
     >
+      <IconButton
+        size="small"
+        color="error"
+        sx={{ position: 'absolute', top: 0, right: 0, zIndex: 2 }}
+        onClick={deleteComponent}
+        aria-label="Delete section"
+      >
+        <CloseIcon />
+      </IconButton>
       <TextField
         variant="outlined"
         placeholder="Add Profile Name..."

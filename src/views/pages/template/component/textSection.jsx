@@ -20,7 +20,7 @@ import { Box } from '@mui/material';
   - Font color picker
 */
 
-const TextSection = forwardRef(({ isEditing }, ref) => {
+const TextSection = forwardRef(({ isEditing, deleteComponent }, ref) => {
   const [component, setComponent] = useState({ content: '' });
   const [tempComponent, setTempComponent] = useState({ content: '' });
   const [focused, setFocused] = useState(false);
@@ -143,7 +143,7 @@ const TextSection = forwardRef(({ isEditing }, ref) => {
   // Dropdown toggle handler
 
   return isEditing ? (
-    <TextEditor editor={editor} active={active} />
+    <TextEditor editor={editor} active={active} deleteComponent={deleteComponent} />
   ) : (
     <Box p={2} dangerouslySetInnerHTML={{ __html: component.content || '' }} />
   );
