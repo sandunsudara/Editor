@@ -37,30 +37,52 @@ const ValueLabelChip = ({ value }) => {
 const ProfileSection = forwardRef(({ isEditing, deleteComponent }, ref) => {
   const [component, setComponent] = useState(defaultComponent);
   const [tempComponent, setTempComponent] = useState(defaultComponent);
-  const [bannerImage, setBannerImage] = useState(null); // user-uploaded banner
-  const [logoImage, setLogoImage] = useState(null); // user-uploaded logo
+  // Store both File and URL for banner and logo images
+  const [bannerImage, setBannerImage] = useState(null); // { file, url }
+  const [logoImage, setLogoImage] = useState(null); // { file, url }
 
   // Expose functions to parent
   useImperativeHandle(ref, () => ({
     saveChanges: () => {
-      console.log('Saving changes for ProfileSection:', tempComponent);
+      // Save tempComponent and image files
       setComponent(tempComponent);
     },
     cancelChanges: () => {
       setTempComponent(component);
+    },
+    getContent: () => {
+      const componentContent = {
+        type: 'profile',
+        settings: {
+          bannerRadius: tempComponent.bannerRadius,
+          bannerHeight: tempComponent.bannerHeight,
+          logoImageJustifyContent: tempComponent.logoImageJustifyContent,
+          logoImageAlignItems: tempComponent.logoImageAlignItems,
+          logoImageSize: tempComponent.logoImageSize,
+          logoImageRadius: tempComponent.logoImageRadius
+        },
+        props: {
+          mainTile: tempComponent.mainTile,
+          subTitle: tempComponent.subTitle,
+          bannerImage: bannerImage ? bannerImage.file : null,
+          logoImage: logoImage ? logoImage.file : null
+        }
+      };
+      console.log(componentContent);
+      return componentContent;
     }
   }));
 
   const handleBannerChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setBannerImage(URL.createObjectURL(file));
+      setBannerImage({ file, url: URL.createObjectURL(file) });
     }
   };
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setLogoImage(URL.createObjectURL(file));
+      setLogoImage({ file, url: URL.createObjectURL(file) });
     }
   };
 
@@ -107,7 +129,7 @@ const ProfileSection = forwardRef(({ isEditing, deleteComponent }, ref) => {
             width: '100%',
             height: tempComponent.bannerHeight,
             borderRadius: tempComponent.bannerRadius,
-            background: bannerImage ? `url(${bannerImage}) center/cover no-repeat` : '#f5f5f5',
+            background: bannerImage ? `url(${bannerImage.url}) center/cover no-repeat` : '#f5f5f5',
             display: 'flex',
             justifyContent: tempComponent.logoImageJustifyContent,
             alignItems: tempComponent.logoImageAlignItems,
@@ -151,7 +173,7 @@ const ProfileSection = forwardRef(({ isEditing, deleteComponent }, ref) => {
             {logoImage ? (
               <Box
                 component="img"
-                src={logoImage}
+                src={logoImage.url}
                 sx={{
                   width: tempComponent.logoImageSize,
                   height: tempComponent.logoImageSize,
@@ -203,7 +225,7 @@ const ProfileSection = forwardRef(({ isEditing, deleteComponent }, ref) => {
             {/* Banner Image File Box */}
             <Box display="flex" alignItems="center" gap={2} mb={1}>
               <Box flex={1} sx={{ border: '1px solid #ccc', borderRadius: 1, px: 2, py: 1, bgcolor: '#fafafa', fontSize: 14 }}>
-                {bannerImage ? bannerImage.split('/').pop() : 'No banner image selected'}
+                {bannerImage ? bannerImage.file.name : 'No banner image selected'}
               </Box>
               {bannerImage ? (
                 <Button variant="outlined" color="error" size="small" onClick={() => setBannerImage(null)} sx={{ width: '120px' }}>
@@ -219,7 +241,7 @@ const ProfileSection = forwardRef(({ isEditing, deleteComponent }, ref) => {
             {/* Logo Image File Box */}
             <Box display="flex" alignItems="center" gap={2}>
               <Box flex={1} sx={{ border: '1px solid #ccc', borderRadius: 1, px: 2, py: 1, bgcolor: '#fafafa', fontSize: 14 }}>
-                {logoImage ? logoImage.split('/').pop() : 'No profile image selected'}
+                {logoImage ? logoImage.file.name : 'No profile image selected'}
               </Box>
               {logoImage ? (
                 <Button variant="outlined" color="error" size="small" sx={{ width: '120px' }} onClick={() => setLogoImage(null)}>
@@ -379,7 +401,7 @@ const ProfileSection = forwardRef(({ isEditing, deleteComponent }, ref) => {
           width: '100%',
           height: component?.bannerHeight || defaultComponent.bannerHeight,
           borderRadius: component?.bannerRadius || defaultComponent.bannerRadius,
-          background: bannerImage ? `url(${bannerImage}) center/cover no-repeat` : '#f5f5f5',
+          background: bannerImage ? `url(${bannerImage.url}) center/cover no-repeat` : '#f5f5f5',
           display: 'flex',
           justifyContent: component?.logoImageJustifyContent || defaultComponent.logoImageJustifyContent,
           alignItems: component?.logoImageAlignItems || defaultComponent.logoImageAlignItems,
@@ -421,7 +443,7 @@ const ProfileSection = forwardRef(({ isEditing, deleteComponent }, ref) => {
           {logoImage ? (
             <Box
               component="img"
-              src={logoImage}
+              src={logoImage.url}
               sx={{
                 width: component?.logoImageSize || defaultComponent.logoImageSize,
                 height: component?.logoImageSize || defaultComponent.logoImageSize,
