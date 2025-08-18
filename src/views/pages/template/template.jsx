@@ -165,13 +165,20 @@ const Template = () => {
 
 
   const handlePublish = () => {
+    let compoents = [];
     componentRefs.current.forEach((ref, idx) => {
-      if (ref && ref.current && typeof ref.current.getContent() === 'function') {
-        ref.current.getContent();
+      if (ref && ref.current && typeof ref.current.getContent === 'function') {
+        const content = ref.current.getContent();
+        compoents.push({ ...content });
       } else {
         console.warn('getContent not found for component', idx);
       }
     });
+    const PageContent = {
+      settings: {},
+      components: compoents
+    };
+    console.log(PageContent);
   };
 
   return (

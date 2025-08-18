@@ -44,7 +44,7 @@ const VideoSection = forwardRef(({ isEditing, deleteComponent }, ref) => {
           url: tempComponent.url
         }
       };
-      console.log(componentContent);
+      return componentContent;
     }
   }));
 

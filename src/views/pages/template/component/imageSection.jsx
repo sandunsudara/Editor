@@ -47,7 +47,7 @@ const ImageSection = forwardRef(({ isEditing, deleteComponent }, ref) => {
           images: component.images.filter((file) => file)
         }
       };
-      console.log(componentContent);
+      return componentContent;
     }
   }));
 

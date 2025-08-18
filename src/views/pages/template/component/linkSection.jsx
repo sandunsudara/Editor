@@ -37,7 +37,7 @@ const LinkSection = forwardRef(({ isEditing, deleteComponent }, ref) => {
           links: tempComponent?.links || []
         }
       };
-      console.log(componentContent);
+      return componentContent;
     }
   }));
 

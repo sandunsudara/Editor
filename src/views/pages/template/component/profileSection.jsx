@@ -68,7 +68,6 @@ const ProfileSection = forwardRef(({ isEditing, deleteComponent }, ref) => {
           logoImage: logoImage ? logoImage.file : null
         }
       };
-      console.log(componentContent);
       return componentContent;
     }
   }));

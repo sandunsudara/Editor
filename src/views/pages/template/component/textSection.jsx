@@ -117,7 +117,7 @@ const TextSection = forwardRef(({ isEditing, deleteComponent }, ref) => {
           content: component.content || '',
           settings: {}
         }
-        console.log(componentContent);
+        return componentContent;
       }
     }),
     [editor, component]
